@@ -1,25 +1,82 @@
+/* eslint-disable node/no-extraneous-import */
 require('dotenv').config();
 import express from 'express';
-import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
-import {MessageResponse} from './types/MessageTypes';
-import {errorHandler, notFound} from './middleware';
+import {ApolloServer} from '@apollo/server';
+import {expressMiddleware} from '@apollo/server/express4';
+import typeDefs from './api/schemas/index';
+import resolvers from './api/resolvers/index';
+import {
+  ApolloServerPluginLandingPageLocalDefault,
+  ApolloServerPluginLandingPageProductionDefault,
+} from '@apollo/server/plugin/landingPage/default';
+import {notFound, errorHandler} from './middlewares';
+import authenticate from './lib/authenticate';
+import {makeExecutableSchema} from '@graphql-tools/schema';
+import {applyMiddleware} from 'graphql-middleware';
+import {MyContext} from './types/MyContext';
+import {createRateLimitRule} from 'graphql-rate-limit';
+import {shield} from 'graphql-shield';
+import {constraintDirectiveTypeDefs} from 'graphql-constraint-directive';
 
 const app = express();
 
-app.use(morgan('dev'));
-app.use(helmet());
-app.use(cors());
-app.use(express.json());
+app.use(
+  helmet({
+    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: false,
+  }),
+);
 
-app.get<{}, MessageResponse>('/', (_req, res) => {
-  res.json({
-    message: 'API location: api/v1',
-  });
-});
+(async () => {
+  try {
+    const rateLimitRule = createRateLimitRule({
+      identifyContext: (ctx) => {
+        return ctx.userdata?._id ? ctx.userdata._id : ctx.id;
+      },
+    });
+    const permissions = shield({
+      Mutation: {
+        login: rateLimitRule({max: 5, window: '10s'}),
+      },
+    });
 
-app.use(notFound);
-app.use(errorHandler);
+    const executableSchema = makeExecutableSchema({
+      typeDefs: [constraintDirectiveTypeDefs, typeDefs],
+      resolvers,
+    });
+
+    const schema = applyMiddleware(executableSchema, permissions);
+
+    const server = new ApolloServer<MyContext>({
+      schema,
+      introspection: true,
+      plugins: [
+        process.env.NODE_ENV === 'production'
+          ? ApolloServerPluginLandingPageProductionDefault({
+              embed: true as false,
+            })
+          : ApolloServerPluginLandingPageLocalDefault(),
+      ],
+      includeStacktraceInErrorResponses: false,
+    });
+    await server.start();
+
+    app.use(
+      '/graphql',
+      cors<cors.CorsRequest>(),
+      express.json(),
+      expressMiddleware(server, {
+        context: async ({req}) => authenticate(req),
+      }),
+    );
+
+    app.use(notFound);
+    app.use(errorHandler);
+  } catch (error) {
+    console.log(error);
+  }
+})();
 
 export default app;

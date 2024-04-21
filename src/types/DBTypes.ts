@@ -15,6 +15,7 @@ type Animal = Partial<Document> & {
   gender: 'male' | 'female';
   image: string;
   location: Point;
+  weight: number;
 };
 
 type User = Partial<Document> & {
