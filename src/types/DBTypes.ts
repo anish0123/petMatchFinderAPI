@@ -16,6 +16,7 @@ type Animal = Partial<Document> & {
   image: string;
   location: Point;
   weight: number;
+  listedDate: Date;
 };
 
 type User = Partial<Document> & {

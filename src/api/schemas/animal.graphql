@@ -1,0 +1,70 @@
+scalar DateTime
+
+type Animal {
+  id: ID!
+  animal_name: String!
+  category: category!
+  birthdate: DateTime!
+  gender: gender!
+  owner: User!
+  image: String!
+  location: Location!
+  listedDate: DateTime!
+}
+
+enum Gender {
+  male
+  female
+}
+
+type Location {
+  type: String!
+  coordinates: [Float]!
+}
+
+input Coordinates {
+  lat: Float!
+  lng: Float!
+}
+
+input LocationInput {
+  type: String!
+  coordinates: [Float]!
+}
+
+type Query {
+  animals: [Animal]
+  animalById(id: ID!): Animal
+  animalsByArea(topRight: Coordinates!, bottomLeft: Coordinates!): [Animal]
+  animalsByOwner(ownerId: ID!): [Animal]
+}
+
+input AnimalInput {
+  animal_name: String!
+  category: category!
+  birthdate: DateTime!
+  gender: gender!
+  image: String!
+  location: LocationInput!
+  listedDate: DateTime!
+}
+
+input AnimalModify {
+  animal_name: String
+  category: category
+  birthdate: DateTime
+  gender: gender
+  image: String
+  location: LocationInput
+  listedDate: DateTime
+}
+
+type Mutation {
+  addAnimal(animal: AnimalInput!): Animal
+  modifyAnimal(id: ID!, animal: AnimalModify!): Animal
+  deleteAnimal(id: ID!): Animal
+}
+
+
+
+
