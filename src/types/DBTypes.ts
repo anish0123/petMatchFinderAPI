@@ -23,30 +23,43 @@ type User = Partial<Document> & {
   user_name: string;
   email: string;
   password: string;
-  role: 'user' | 'admin';
+  role: 'adopter' | 'lister' | 'admin';
   streetAddress: string;
-  postalCode: number;
+  postalCode: String;
   city: string;
 };
 
-type LoginUser = Omit<User, 'password'>;
 
 type TokenContent = {
   token: string;
-  user: LoginUser;
+  user: UserWithoutPassword;
 };
 
 
 type UserWithoutPassword = Omit<User, 'password'>;
 
+type UserInput = Omit<User, 'id' | 'role'>;
+
 type UserWithoutPasswordRole = Omit<UserWithoutPassword, 'role'>;
+
+type coordinates = {
+  lat: number;
+  lng: number;
+};
+
+type LocationInput = {
+  topRight: coordinates;
+  bottomLeft: coordinates;
+};
 
 export {
   Category,
   Animal,
   User,
   TokenContent,
-  LoginUser,
+  UserInput,
   UserWithoutPassword,
   UserWithoutPasswordRole,
+  coordinates,
+  LocationInput
 };

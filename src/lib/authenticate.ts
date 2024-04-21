@@ -1,4 +1,4 @@
-import { LoginUser, TokenContent } from "../types/DBTypes";
+import { UserWithoutPassword, TokenContent } from "../types/DBTypes";
 import { MyContext } from "../types/MyContext";
 import {Request} from 'express';
 import jwt from 'jsonwebtoken';
@@ -11,7 +11,7 @@ export default async (req: Request): Promise<MyContext> => {
       const userFromToken = jwt.verify(
         token,
         process.env.JWT_SECRET as string,
-      ) as LoginUser;
+      ) as UserWithoutPassword;
       // or check if user is in the auth server database
       // console.log(token);
       // const user = await fetchData<UserResponse>(

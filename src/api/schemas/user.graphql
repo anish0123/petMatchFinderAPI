@@ -2,9 +2,15 @@ type User {
   id: ID!
   user_name: String!
   email: String!
-  streetAddress: string!
-  postalCode: number!
-  city: string!
+  streetAddress: String!
+  postalCode: String!
+  city: String!
+}
+
+enum Role {
+  lister
+  adopter
+  admin
 }
 
 type LoginResponse {
@@ -27,18 +33,18 @@ input UserInput {
   user_name: String!
   email: String!
   password: String!
-  streetAddress: string!
-  postalCode: number!
-  city: string!
+  streetAddress: String!
+  postalCode: String!
+  city: String!
 }
 
 input UserModify {
   user_name: String
   email: String
   password: String
-  streetAddress: string
-  postalCode: number
-  city: string
+  streetAddress: String
+  postalCode: String
+  city: String
 }
 
 type Query {

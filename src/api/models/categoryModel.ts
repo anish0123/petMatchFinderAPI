@@ -1,4 +1,3 @@
-// Schema for category model
 import mongoose from 'mongoose';
 import {Category} from '../../types/DBTypes';
 

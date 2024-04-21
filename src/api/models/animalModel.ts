@@ -51,4 +51,6 @@ const animalModel = new mongoose.Schema<Animal>({
     required: [true, 'Listed date is required.'],
     max: [Date.now(), 'Listed date cannot be in the future.'],
   }
-})
+});
+
+export default mongoose.model<Animal>('Animal', animalModel);

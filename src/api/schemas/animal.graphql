@@ -3,13 +3,14 @@ scalar DateTime
 type Animal {
   id: ID!
   animal_name: String!
-  category: category!
+  category: Category!
   birthdate: DateTime!
-  gender: gender!
+  gender: Gender!
   owner: User!
   image: String!
   location: Location!
   listedDate: DateTime!
+  weight: Float!
 }
 
 enum Gender {
@@ -41,22 +42,24 @@ type Query {
 
 input AnimalInput {
   animal_name: String!
-  category: category!
+  category: ID!
   birthdate: DateTime!
-  gender: gender!
+  gender: Gender!
   image: String!
   location: LocationInput!
   listedDate: DateTime!
+  weight: Float!
 }
 
 input AnimalModify {
   animal_name: String
-  category: category
+  category: ID
   birthdate: DateTime
-  gender: gender
+  gender: Gender
   image: String
   location: LocationInput
   listedDate: DateTime
+  weight: Float
 }
 
 type Mutation {
