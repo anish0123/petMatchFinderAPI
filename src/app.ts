@@ -3,10 +3,8 @@ import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
-
-import {notFound, errorHandler} from './middlewares';
-import api from './api';
 import {MessageResponse} from './types/MessageTypes';
+import {errorHandler, notFound} from './middleware';
 
 const app = express();
 
@@ -20,8 +18,6 @@ app.get<{}, MessageResponse>('/', (_req, res) => {
     message: 'API location: api/v1',
   });
 });
-
-app.use('/api/v1', api);
 
 app.use(notFound);
 app.use(errorHandler);
