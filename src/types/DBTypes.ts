@@ -7,8 +7,8 @@ type Category = {
 };
 
 type Animal = Partial<Document> & {
-  animal_id: mongoose.Types.ObjectId;
   animal_name: string;
+  description: string;
   category: mongoose.Types.ObjectId;
   birthdate: Date;
   owner: mongoose.Types.ObjectId;
@@ -17,6 +17,7 @@ type Animal = Partial<Document> & {
   location: Point;
   weight: number;
   listedDate: Date;
+  adoptionStatus: 'adopted' | 'available';
 };
 
 type User = Partial<Document> & {
@@ -29,12 +30,17 @@ type User = Partial<Document> & {
   city: string;
 };
 
+type AdoptionApplication = Partial<Document> & {
+  animal: mongoose.Types.ObjectId;
+  adopter: mongoose.Types.ObjectId;
+  description: string;
+  appliedDate: Date;
+};
 
 type TokenContent = {
   token: string;
   user: UserWithoutPassword;
 };
-
 
 type UserWithoutPassword = Omit<User, 'password'>;
 
@@ -56,10 +62,11 @@ export {
   Category,
   Animal,
   User,
+  AdoptionApplication,
   TokenContent,
   UserInput,
   UserWithoutPassword,
   UserWithoutPasswordRole,
   coordinates,
-  LocationInput
+  LocationInput,
 };

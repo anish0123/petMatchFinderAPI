@@ -16,7 +16,7 @@ export default {
   },
   Query: {
     categories: async () => {
-      return await categoryModel.find().select(' -__v');;
+      return await categoryModel.find().select(' -__v');
     },
     category: async (_parent: undefined, args: {id: string}) => {
       const category = await categoryModel.findById(args.id).select(' -__v');
@@ -34,14 +34,13 @@ export default {
       args: {category: Omit<Category, '_id'>},
       context: MyContext,
     ): Promise<{message: string; category?: Category}> => {
-      console.log("args: ", args);
       if (!context.userdata || context.userdata.user.role !== 'admin') {
         throw new GraphQLError('User not authorized', {
           extensions: {code: 'UNAUTHORIZED'},
         });
       }
       const newCategory = await categoryModel.create(args.category);
-      console.log("newCategory: ", newCategory);
+      console.log('newCategory: ', newCategory);
       if (newCategory) {
         return {message: 'Category added', category: newCategory};
       } else {
@@ -52,13 +51,11 @@ export default {
       _parent: undefined,
       args: {category: Omit<Category, '_id'>; id: string},
     ): Promise<{message: string; category?: Category}> => {
-      const category = await categoryModel.findByIdAndUpdate(
-        args.id,
-        args.category,
-        {
+      const category = await categoryModel
+        .findByIdAndUpdate(args.id, args.category, {
           new: true,
-        },
-      ).select(' -__v');
+        })
+        .select(' -__v');
       if (category) {
         return {message: 'Category updated', category: category};
       } else {
@@ -78,8 +75,10 @@ export default {
         });
       }
       // delete species and animals that belong to this category
-        await animalModel.deleteMany({category: args.id});
-      const category = await categoryModel.findByIdAndDelete(args.id).select(' -__v');
+      await animalModel.deleteMany({category: args.id});
+      const category = await categoryModel
+        .findByIdAndDelete(args.id)
+        .select(' -__v');
       if (category) {
         return {message: 'Category deleted', category: category};
       } else {

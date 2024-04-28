@@ -1,8 +1,14 @@
 import {GraphQLError} from 'graphql';
 import {MyContext} from '../../types/MyContext';
-import { Animal, User, UserInput, UserWithoutPasswordRole } from '../../types/DBTypes';
+import {
+  AdoptionApplication,
+  Animal,
+  User,
+  UserInput,
+  UserWithoutPasswordRole,
+} from '../../types/DBTypes';
 import fetchData from '../../lib/fetchData';
-import { MessageResponse } from '../../types/MessageTypes';
+import {MessageResponse} from '../../types/MessageTypes';
 
 export default {
   Animal: {
@@ -12,6 +18,20 @@ export default {
       }
       const user = await fetchData<User>(
         process.env.AUTH_URL + '/users/' + parent.owner,
+      );
+      user.id = user._id;
+      return user;
+    },
+  },
+  AdoptionApplication: {
+    adopter: async (
+      parent: AdoptionApplication,
+    ): Promise<UserWithoutPasswordRole> => {
+      if (!process.env.AUTH_URL) {
+        throw new GraphQLError('No auth url set in .env file');
+      }
+      const user = await fetchData<User>(
+        process.env.AUTH_URL + '/users/' + parent.adopter,
       );
       user.id = user._id;
       return user;
@@ -43,15 +63,23 @@ export default {
       _args: undefined,
       context: MyContext,
     ) => {
+      if (context.userdata) {
+        context.userdata.user.id = context.userdata?.user._id;
+      }
+
       const response = {
         message: 'Token is valid',
-        user: context.userdata,
+        token: context.userdata?.token,
+        user: context.userdata?.user,
       };
       return response;
     },
   },
   Mutation: {
-    register: async (_parent: undefined, args: {user: User}): Promise<{message: string; user: UserWithoutPasswordRole}> => {
+    register: async (
+      _parent: undefined,
+      args: {user: User},
+    ): Promise<{message: string; user: UserWithoutPasswordRole}> => {
       if (!process.env.AUTH_URL) {
         throw new GraphQLError('No auth url set in .env file');
       }
@@ -62,17 +90,18 @@ export default {
         },
         body: JSON.stringify(args.user),
       };
-      const registerResponse = await fetchData< MessageResponse & {data: UserWithoutPasswordRole}>(
-        process.env.AUTH_URL + '/users',
-        options,
-      );
-      console.log("registerResponse: ", registerResponse);
+      const registerResponse = await fetchData<
+        MessageResponse & {data: UserWithoutPasswordRole}
+      >(process.env.AUTH_URL + '/users', options);
+      console.log('registerResponse: ', registerResponse);
       return {user: registerResponse.data, message: registerResponse.message};
     },
     login: async (
       _parent: undefined,
       args: {credentials: {email: string; password: string}},
-    ): Promise<MessageResponse & {token: string; user: UserWithoutPasswordRole}> => {
+    ): Promise<
+      MessageResponse & {token: string; user: UserWithoutPasswordRole}
+    > => {
       if (!process.env.AUTH_URL) {
         throw new GraphQLError('No auth url set in .env file');
       }
@@ -93,25 +122,29 @@ export default {
       _parent: undefined,
       args: {user: UserInput},
       context: MyContext,
-    ): Promise<{message: string; data: UserWithoutPasswordRole}> => {
-      if (!context.userdata) {
-        throw new GraphQLError('User not authenticated', {
-          extensions: {code: 'UNAUTHENTICATED'},
-        });
+    ) => {
+      try {
+        if (!context.userdata) {
+          throw new GraphQLError('User not authenticated', {
+            extensions: {code: 'UNAUTHENTICATED'},
+          });
+        }
+        const options = {
+          method: 'PUT',
+          headers: {
+            'CONTENT-TYPE': 'application/json',
+            Authorization: 'Bearer ' + context.userdata.token,
+          },
+          body: JSON.stringify(args.user),
+        };
+        const user = await fetchData<
+          MessageResponse & {data: UserWithoutPasswordRole}
+        >(process.env.AUTH_URL + '/users', options);
+        console.log('user: ', user);
+        return user;
+      } catch (error) {
+        console.log('error: ', error);
       }
-      const options = {
-        method: 'PUT',
-        headers: {
-          'CONTENT-TYPE': 'application/json',
-          Authorization: 'Bearer ' + context.userdata.token,
-        },
-        body: JSON.stringify(args.user),
-      };
-      const user = await fetchData<MessageResponse & {data: UserWithoutPasswordRole}>(
-        process.env.AUTH_URL + '/users',
-        options,
-      );
-      return user;
     },
     deleteUser: async (
       _parent: undefined,
@@ -129,10 +162,9 @@ export default {
           Authorization: 'Bearer ' + context.userdata.token,
         },
       };
-      const user = await fetchData<MessageResponse & {data: UserWithoutPasswordRole}>(
-        process.env.AUTH_URL + '/users',
-        options,
-      );
+      const user = await fetchData<
+        MessageResponse & {data: UserWithoutPasswordRole}
+      >(process.env.AUTH_URL + '/users', options);
       return user;
     },
     deleteUserAsAdmin: async (
@@ -156,10 +188,9 @@ export default {
           Authorization: 'Bearer ' + context.userdata.token,
         },
       };
-      const user = await fetchData<MessageResponse & {data: UserWithoutPasswordRole}>(
-        process.env.AUTH_URL + `/users/${args.id}`,
-        options,
-      );
+      const user = await fetchData<
+        MessageResponse & {data: UserWithoutPasswordRole}
+      >(process.env.AUTH_URL + `/users/${args.id}`, options);
       return user;
     },
   },

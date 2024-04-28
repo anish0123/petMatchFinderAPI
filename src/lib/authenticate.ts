@@ -1,5 +1,5 @@
-import { UserWithoutPassword, TokenContent } from "../types/DBTypes";
-import { MyContext } from "../types/MyContext";
+import {UserWithoutPassword, TokenContent} from '../types/DBTypes';
+import {MyContext} from '../types/MyContext';
 import {Request} from 'express';
 import jwt from 'jsonwebtoken';
 

@@ -4,6 +4,7 @@ type Animal {
   id: ID!
   animal_name: String!
   category: Category!
+  description: String!
   birthdate: DateTime!
   gender: Gender!
   owner: User!
@@ -11,11 +12,17 @@ type Animal {
   location: Location!
   listedDate: DateTime!
   weight: Float!
+  adoptionStatus: AdoptionStatus!
 }
 
 enum Gender {
   male
   female
+}
+
+enum AdoptionStatus {
+  available
+  adopted
 }
 
 type Location {
@@ -49,6 +56,8 @@ input AnimalInput {
   location: LocationInput!
   listedDate: DateTime!
   weight: Float!
+  description: String!
+  adoptionStatus: AdoptionStatus!
 }
 
 input AnimalModify {
@@ -60,6 +69,8 @@ input AnimalModify {
   location: LocationInput
   listedDate: DateTime
   weight: Float
+  description: String
+  adoptionStatus: AdoptionStatus
 }
 
 type Mutation {

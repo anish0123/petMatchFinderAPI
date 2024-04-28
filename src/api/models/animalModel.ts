@@ -1,6 +1,5 @@
-
-import mongoose from "mongoose";
-import { Animal } from "../../types/DBTypes";
+import mongoose from 'mongoose';
+import {Animal} from '../../types/DBTypes';
 
 const animalModel = new mongoose.Schema<Animal>({
   animal_name: {
@@ -50,7 +49,16 @@ const animalModel = new mongoose.Schema<Animal>({
     type: Date,
     required: [true, 'Listed date is required.'],
     max: [Date.now(), 'Listed date cannot be in the future.'],
-  }
+  },
+  description: {
+    type: String,
+    minlength: [2, 'Minimum length is 2 characters.'],
+  },
+  adoptionStatus: {
+    type: String,
+    enum: ['adopted', 'available'],
+    required: true,
+  },
 });
 
 export default mongoose.model<Animal>('Animal', animalModel);

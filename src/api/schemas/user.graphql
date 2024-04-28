@@ -1,10 +1,10 @@
 type User {
-  id: ID!
-  user_name: String!
-  email: String!
-  streetAddress: String!
-  postalCode: String!
-  city: String!
+  id: ID
+  user_name: String
+  email: String
+  streetAddress: String
+  postalCode: String
+  city: String
 }
 
 enum Role {
@@ -21,11 +21,12 @@ type LoginResponse {
 
 type UserResponse {
   message: String!
-  user: User!
+  token: String
+  user: User
 }
 
 input Credentials {
-  username: String!
+  email: String!
   password: String!
 }
 
@@ -36,6 +37,7 @@ input UserInput {
   streetAddress: String!
   postalCode: String!
   city: String!
+  role: Role!
 }
 
 input UserModify {
@@ -50,7 +52,7 @@ input UserModify {
 type Query {
   users: [User]
   userById(id: ID!): User
-  checkToken: UserResponse
+  checkToken: UserResponse!
 }
 
 type Mutation {

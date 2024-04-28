@@ -1,0 +1,33 @@
+scalar DateTime
+
+type AdoptionApplication {
+  id: ID!
+  adopter: User!
+  animal: Animal!
+  appliedDate: DateTime!
+  description: String!
+}
+
+type Query {
+  adoptionApplications: [AdoptionApplication]
+  adoptionApplicationById(id: ID!): AdoptionApplication
+  adoptionApplicationsByAnimal(animalId: ID!): [AdoptionApplication]
+  adoptionApplicationsByAdopter(adopterId: ID!): [AdoptionApplication]
+}
+
+input AdoptionApplicationInput {
+  animal: ID!
+  appliedDate: DateTime!
+  description: String!
+}
+input AdoptionApplicationModify {
+  animal: ID
+  appliedDate: DateTime
+  description: String
+}
+
+type Mutation {
+  addAdoptionApplication(input: AdoptionApplicationInput!): AdoptionApplication
+  modifyAdoptionApplication(id: ID!, input: AdoptionApplicationModify!): AdoptionApplication
+  deleteAdoptionApplication(id: ID!): AdoptionApplication
+}
