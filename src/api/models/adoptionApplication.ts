@@ -20,6 +20,11 @@ const adoptionApplicationModel = new mongoose.Schema<AdoptionApplication>({
     type: Date,
     required: [true, 'Applied date is required.'],
   },
+  applicationStatus: {
+    type: String,
+    enum: ['approved', 'pending', 'rejected'],
+    required: true,
+  },
 });
 
 export default mongoose.model<AdoptionApplication>(

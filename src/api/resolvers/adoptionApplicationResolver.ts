@@ -58,37 +58,32 @@ export default {
       args: {input: Omit<AdoptionApplication, '_id'>},
       context: MyContext,
     ) => {
-      try {
-        console.log('date: ', Date.now());
-        args.input.appliedDate = new Date();
-        console.log('args: ', args);
-        if (!context.userdata) {
-          throw new GraphQLError('User not authenticated', {
-            extensions: {code: 'UNAUTHENTICATED'},
-          });
-        }
-        if (context.userdata.user.role === 'lister') {
-          throw new GraphQLError('Listers cannot adopt animals', {
-            extensions: {code: 'BAD_REQUEST'},
-          });
-        }
-        const animal = await animalModel.findById(args.input.animal);
-        if (animal?.adoptionStatus === 'adopted') {
-          throw new GraphQLError('Animal already adopted', {
-            extensions: {code: 'BAD_REQUEST'},
-          });
-        }
-        args.input.adopter = context.userdata.user._id;
-        const newAdoptionApplication = await adoptionApplicationModel.create(
-          args.input,
-        );
-        if (!newAdoptionApplication) {
-          throw new Error('Error adding application');
-        }
-        return newAdoptionApplication;
-      } catch (error) {
-        console.log('error: ', error);
+      args.input.appliedDate = new Date();
+      console.log('args: ', args);
+      if (!context.userdata) {
+        throw new GraphQLError('User not authenticated', {
+          extensions: {code: 'UNAUTHENTICATED'},
+        });
       }
+      if (context.userdata.user.role === 'lister') {
+        throw new GraphQLError('Listers cannot adopt animals', {
+          extensions: {code: 'BAD_REQUEST'},
+        });
+      }
+      const animal = await animalModel.findById(args.input.animal);
+      if (animal?.adoptionStatus === 'adopted') {
+        throw new GraphQLError('Animal already adopted', {
+          extensions: {code: 'BAD_REQUEST'},
+        });
+      }
+      args.input.adopter = context.userdata.user._id;
+      const newAdoptionApplication = await adoptionApplicationModel.create(
+        args.input,
+      );
+      if (!newAdoptionApplication) {
+        throw new Error('Error adding application');
+      }
+      return newAdoptionApplication;
     },
     modifyAdoptionApplication: async (
       _parent: undefined,

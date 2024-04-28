@@ -35,6 +35,7 @@ type AdoptionApplication = Partial<Document> & {
   adopter: mongoose.Types.ObjectId;
   description: string;
   appliedDate: Date;
+  applicationStatus: 'pending' | 'approved' | 'rejected';
 };
 
 type TokenContent = {

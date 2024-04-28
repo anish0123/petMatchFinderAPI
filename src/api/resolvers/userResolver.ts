@@ -123,28 +123,24 @@ export default {
       args: {user: UserInput},
       context: MyContext,
     ) => {
-      try {
-        if (!context.userdata) {
-          throw new GraphQLError('User not authenticated', {
-            extensions: {code: 'UNAUTHENTICATED'},
-          });
-        }
-        const options = {
-          method: 'PUT',
-          headers: {
-            'CONTENT-TYPE': 'application/json',
-            Authorization: 'Bearer ' + context.userdata.token,
-          },
-          body: JSON.stringify(args.user),
-        };
-        const user = await fetchData<
-          MessageResponse & {data: UserWithoutPasswordRole}
-        >(process.env.AUTH_URL + '/users', options);
-        console.log('user: ', user);
-        return user;
-      } catch (error) {
-        console.log('error: ', error);
+      if (!context.userdata) {
+        throw new GraphQLError('User not authenticated', {
+          extensions: {code: 'UNAUTHENTICATED'},
+        });
       }
+      const options = {
+        method: 'PUT',
+        headers: {
+          'CONTENT-TYPE': 'application/json',
+          Authorization: 'Bearer ' + context.userdata.token,
+        },
+        body: JSON.stringify(args.user),
+      };
+      const user = await fetchData<
+        MessageResponse & {data: UserWithoutPasswordRole}
+      >(process.env.AUTH_URL + '/users', options);
+      console.log('user: ', user);
+      return user;
     },
     deleteUser: async (
       _parent: undefined,

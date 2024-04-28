@@ -6,6 +6,13 @@ type AdoptionApplication {
   animal: Animal!
   appliedDate: DateTime!
   description: String!
+  applicationStatus: ApplicationStatus
+}
+
+enum ApplicationStatus {
+  pending
+  approved
+  rejected
 }
 
 type Query {
@@ -19,11 +26,13 @@ input AdoptionApplicationInput {
   animal: ID!
   appliedDate: DateTime!
   description: String!
+  applicationStatus: ApplicationStatus!
 }
 input AdoptionApplicationModify {
   animal: ID
   appliedDate: DateTime
   description: String
+  applicationStatus: ApplicationStatus
 }
 
 type Mutation {
