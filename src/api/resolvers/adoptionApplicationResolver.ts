@@ -9,19 +9,19 @@ export default {
     adoptionApplications: async () => {
       return await adoptionApplicationModel.find();
     },
-    adoptionApplicationById: async (
-      _parent: undefined,
-      args: {application_id: string},
-    ) => {
-      const application = await adoptionApplicationModel.findById(
-        args.application_id,
-      );
-      if (!application) {
-        throw new GraphQLError('Application not found', {
-          extensions: {code: 'NOT_FOUND'},
-        });
+    adoptionApplicationById: async (_parent: undefined, args: {id: string}) => {
+      try {
+        console.log('applicationId: ', args.id);
+        const application = await adoptionApplicationModel.findById(args.id);
+        if (!application) {
+          throw new GraphQLError('Application not found', {
+            extensions: {code: 'NOT_FOUND'},
+          });
+        }
+        return application;
+      } catch (error) {
+        console.error(error);
       }
-      return application;
     },
     adoptionApplicationsByAdopter: async (
       _parent: undefined,
@@ -58,7 +58,6 @@ export default {
       args: {input: Omit<AdoptionApplication, '_id'>},
       context: MyContext,
     ) => {
-      args.input.appliedDate = new Date();
       console.log('args: ', args);
       if (!context.userdata) {
         throw new GraphQLError('User not authenticated', {

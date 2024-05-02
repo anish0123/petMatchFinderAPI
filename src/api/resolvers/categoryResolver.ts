@@ -3,6 +3,16 @@ import {Animal, Category} from '../../types/DBTypes';
 import categoryModel from '../models/categoryModel';
 import {MyContext} from '../../types/MyContext';
 import animalModel from '../models/animalModel';
+import {Socket, io} from 'socket.io-client';
+import {ClientToServerEvents, ServerToClientEvents} from '../../types/Socket';
+
+if (!process.env.SOCKET_URL) {
+  throw new Error('SOCKET_URL not defined');
+}
+// socket io client
+const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
+  process.env.SOCKET_URL,
+);
 
 export default {
   Animal: {
@@ -40,8 +50,8 @@ export default {
         });
       }
       const newCategory = await categoryModel.create(args.category);
-      console.log('newCategory: ', newCategory);
       if (newCategory) {
+        socket.emit('update', 'category');
         return {message: 'Category added', category: newCategory};
       } else {
         throw new Error('Category not added');

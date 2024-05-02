@@ -2,6 +2,17 @@ import {GraphQLError} from 'graphql';
 import animalModel from '../models/animalModel';
 import {AdoptionApplication, Animal, coordinates} from '../../types/DBTypes';
 import {MyContext} from '../../types/MyContext';
+import {Socket, io} from 'socket.io-client';
+import {ClientToServerEvents, ServerToClientEvents} from '../../types/Socket';
+
+if (!process.env.SOCKET_URL) {
+  throw new Error('SOCKET_URL not defined');
+}
+
+// socket io client
+const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
+  process.env.SOCKET_URL as string,
+);
 
 export default {
   AdoptionApplication: {
@@ -31,13 +42,17 @@ export default {
       }
     },
     animalsByOwner: async (_parent: undefined, args: {ownerId: string}) => {
-      const animals = await animalModel.find({owner: args.ownerId});
-      if (animals.length === 0) {
-        throw new GraphQLError('No animals found', {
-          extensions: {code: 'NOT_FOUND'},
-        });
+      try {
+        const animals = await animalModel.find({owner: args.ownerId});
+        if (animals.length === 0) {
+          throw new GraphQLError('No animals found', {
+            extensions: {code: 'NOT_FOUND'},
+          });
+        }
+        return animals;
+      } catch (error) {
+        console.error('error: ', error);
       }
-      return animals;
     },
     animalsByArea: async (
       _parent: undefined,
@@ -66,7 +81,7 @@ export default {
       _parent: undefined,
       args: {animal: Omit<Animal, '_id'>},
       context: MyContext,
-    ): Promise<Animal> => {
+    ): Promise<{message: string; animal?: Animal}> => {
       if (!context.userdata) {
         throw new GraphQLError('User not authenticated', {
           extensions: {code: 'UNAUTHENTICATED'},
@@ -82,13 +97,14 @@ export default {
       if (!newAnimal) {
         throw new Error('Error adding animal');
       }
-      return newAnimal;
+      socket.emit('update', 'modifyAnimal');
+      return {message: 'Animal added', animal: newAnimal};
     },
     modifyAnimal: async (
       _parent: undefined,
       args: {id: string; animal: Omit<Animal, '_id'>},
       context: MyContext,
-    ): Promise<Animal> => {
+    ): Promise<{message: string; animal?: Animal}> => {
       if (!context.userdata) {
         throw new GraphQLError('User not authenticated', {
           extensions: {code: 'UNAUTHENTICATED'},
@@ -108,13 +124,14 @@ export default {
           extensions: {code: 'NOT_FOUND'},
         });
       }
-      return updatedAnimal;
+      socket.emit('update', 'modifyAnimal');
+      return {message: 'Animal updated', animal: updatedAnimal};
     },
     deleteAnimal: async (
       _parent: undefined,
       args: {id: string},
       context: MyContext,
-    ): Promise<Animal> => {
+    ): Promise<{message: string; animal?: Animal}> => {
       if (!context.userdata) {
         throw new GraphQLError('User not authenticated', {
           extensions: {code: 'UNAUTHENTICATED'},
@@ -124,11 +141,11 @@ export default {
       if (context.userdata.user.role === 'admin') {
         delete filter.owner;
       }
-      const deletedCat = await animalModel.findOneAndDelete(filter);
-      if (!deletedCat) {
+      const deletedAnimal = await animalModel.findOneAndDelete(filter);
+      if (!deletedAnimal) {
         throw new Error('Cat not found');
       }
-      return deletedCat;
+      return {message: 'Animal deleted', animal: deletedAnimal};
     },
   },
 };

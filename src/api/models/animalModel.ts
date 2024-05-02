@@ -48,7 +48,6 @@ const animalModel = new mongoose.Schema<Animal>({
   listedDate: {
     type: Date,
     required: [true, 'Listed date is required.'],
-    max: [Date.now(), 'Listed date cannot be in the future.'],
   },
   description: {
     type: String,

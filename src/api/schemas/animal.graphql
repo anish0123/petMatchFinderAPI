@@ -72,11 +72,15 @@ input AnimalModify {
   description: String
   adoptionStatus: AdoptionStatus
 }
+type AnimalMessage {
+  message: String!,
+  animal: Animal
+}
 
 type Mutation {
-  addAnimal(animal: AnimalInput!): Animal
-  modifyAnimal(id: ID!, animal: AnimalModify!): Animal
-  deleteAnimal(id: ID!): Animal
+  addAnimal(animal: AnimalInput!): AnimalMessage
+  modifyAnimal(id: ID!, animal: AnimalModify!): AnimalMessage
+  deleteAnimal(id: ID!): AnimalMessage
 }
 
 
