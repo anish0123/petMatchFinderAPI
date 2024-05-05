@@ -87,11 +87,6 @@ export default {
           extensions: {code: 'UNAUTHENTICATED'},
         });
       }
-      if (context.userdata.user.role === 'adopter') {
-        throw new GraphQLError('Adopters cannot add animals', {
-          extensions: {code: 'BAD_REQUEST'},
-        });
-      }
       args.animal.owner = context.userdata.user._id;
       const newAnimal = await animalModel.create(args.animal);
       if (!newAnimal) {

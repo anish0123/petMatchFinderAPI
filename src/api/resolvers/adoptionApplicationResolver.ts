@@ -64,14 +64,14 @@ export default {
           extensions: {code: 'UNAUTHENTICATED'},
         });
       }
-      if (context.userdata.user.role === 'lister') {
-        throw new GraphQLError('Listers cannot adopt animals', {
-          extensions: {code: 'BAD_REQUEST'},
-        });
-      }
       const animal = await animalModel.findById(args.input.animal);
       if (animal?.adoptionStatus === 'adopted') {
         throw new GraphQLError('Animal already adopted', {
+          extensions: {code: 'BAD_REQUEST'},
+        });
+      }
+      if (animal?.owner.id === context.userdata.user._id) {
+        throw new GraphQLError('Owner can not adopt animal', {
           extensions: {code: 'BAD_REQUEST'},
         });
       }
@@ -88,24 +88,36 @@ export default {
       _parent: undefined,
       args: {id: string; input: Omit<AdoptionApplication, '_id'>},
       context: MyContext,
-    ): Promise<AdoptionApplication> => {
-      if (!context.userdata) {
-        throw new GraphQLError('User not authenticated', {
-          extensions: {code: 'UNAUTHENTICATED'},
-        });
+    ) => {
+      try {
+        console.log('input: ', args.input);
+        if (!context.userdata) {
+          throw new GraphQLError('User not authenticated', {
+            extensions: {code: 'UNAUTHENTICATED'},
+          });
+        }
+        const filter = {_id: args.id, adopter: context.userdata.user._id};
+        if (context.userdata.user.role === 'admin') {
+          delete filter.adopter;
+        }
+        const adoptionApplication =
+          await adoptionApplicationModel.findOneAndUpdate(filter, args.input, {
+            new: true,
+          });
+        if (!adoptionApplication) {
+          throw new Error('Error modifying application');
+        }
+        if (adoptionApplication.applicationStatus === 'approved') {
+          const animal = await animalModel.findById(adoptionApplication.animal);
+          if (animal) {
+            animal.adoptionStatus = 'adopted';
+            await animal.save();
+          }
+        }
+        return adoptionApplication;
+      } catch (error) {
+        console.error(error);
       }
-      const filter = {_id: args.id, owner: context.userdata.user._id};
-      if (context.userdata.user.role === 'admin') {
-        delete filter.owner;
-      }
-      const adoptionApplication =
-        await adoptionApplicationModel.findOneAndUpdate(filter, args.input, {
-          new: true,
-        });
-      if (!adoptionApplication) {
-        throw new Error('Error modifying application');
-      }
-      return adoptionApplication;
     },
     deleteAdoptionApplication: async (
       _parent: undefined,

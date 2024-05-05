@@ -8,8 +8,7 @@ type User {
 }
 
 enum Role {
-  lister
-  adopter
+  user
   admin
 }
 
