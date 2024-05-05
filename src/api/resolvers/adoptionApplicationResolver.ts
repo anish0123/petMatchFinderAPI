@@ -100,6 +100,20 @@ export default {
         if (context.userdata.user.role === 'admin') {
           delete filter.adopter;
         }
+        if (
+          args.input.applicationStatus &&
+          args.input.applicationStatus !== 'pending' &&
+          context.userdata.user.role !== 'admin'
+        ) {
+          const application = await adoptionApplicationModel.findById(args.id);
+          const animal = await animalModel.findById(application?.animal);
+          if (animal?.owner._id.toString() !== context.userdata.user._id) {
+            throw new GraphQLError('User not authorized', {
+              extensions: {code: 'UNAUTHORIZED'},
+            });
+          }
+          delete filter.adopter;
+        }
         const adoptionApplication =
           await adoptionApplicationModel.findOneAndUpdate(filter, args.input, {
             new: true,
@@ -113,6 +127,15 @@ export default {
             animal.adoptionStatus = 'adopted';
             await animal.save();
           }
+          const applications = await adoptionApplicationModel.find({
+            animal: animal?._id,
+          });
+          applications.forEach(async (application) => {
+            if (application._id.toString() !== args.id) {
+              application.applicationStatus = 'rejected';
+              await application.save();
+            }
+          });
         }
         return adoptionApplication;
       } catch (error) {
