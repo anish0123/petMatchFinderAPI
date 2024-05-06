@@ -11,7 +11,6 @@ export default {
     },
     adoptionApplicationById: async (_parent: undefined, args: {id: string}) => {
       try {
-        console.log('applicationId: ', args.id);
         const application = await adoptionApplicationModel.findById(args.id);
         if (!application) {
           throw new GraphQLError('Application not found', {

@@ -92,7 +92,7 @@ export default {
       if (!newAnimal) {
         throw new Error('Error adding animal');
       }
-      socket.emit('update', 'modifyAnimal');
+      socket.emit('update', 'animal');
       return {message: 'Animal added', animal: newAnimal};
     },
     modifyAnimal: async (
