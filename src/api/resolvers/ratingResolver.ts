@@ -18,7 +18,6 @@ export default {
   Query: {
     ratings: async () => {
       try {
-        console.log('ratings: ', await ratingModel.find());
         return await ratingModel.find();
       } catch (error) {
         console.error(error);
@@ -37,26 +36,33 @@ export default {
         console.error(error);
       }
     },
-    ratingByRatingUser: async (_parent: undefined, args: {userId: string}) => {
+    ratingByRatingUser: async (_parent: undefined, args: {ratedBy: string}) => {
       try {
-        const ratings = await ratingModel.find({ratedBy: args.userId});
+        const ratings = await ratingModel.find({ratedBy: args.ratedBy});
         if (ratings.length === 0) {
           throw new GraphQLError('ratings not found', {
             extensions: {code: 'NOT_FOUND'},
           });
         }
+        return ratings;
       } catch (error) {
         console.error(error);
       }
     },
-    ratingByRatedToUser: async (_parent: undefined, args: {userId: string}) => {
+    ratingByRatedToUser: async (
+      _parent: undefined,
+      args: {ratedTo: string},
+    ) => {
       try {
-        const ratings = await ratingModel.find({ratedTo: args.userId});
+        console.log('args: ', args);
+        const ratings = await ratingModel.find({ratedTo: args.ratedTo});
+        console.log('ratings: ', ratings);
         if (ratings.length === 0) {
           throw new GraphQLError('ratings not found', {
             extensions: {code: 'NOT_FOUND'},
           });
         }
+        return ratings;
       } catch (error) {
         console.error(error);
       }
@@ -103,7 +109,7 @@ export default {
       if (!updatedRating) {
         throw new Error('Error adding rating');
       }
-      socket.emit('update', 'rating');
+      socket.emit('update', 'modifyRating');
       return {message: 'Rating added', rating: updatedRating};
     },
     deleteRating: async (
@@ -122,9 +128,9 @@ export default {
       }
       const deletedRating = await ratingModel.findOneAndDelete(filter);
       if (!deletedRating) {
-        throw new Error('Cat not found');
+        throw new Error('Rating not found');
       }
-      return {message: 'Animal deleted', rating: deletedRating};
+      return {message: 'Rating deleted', rating: deletedRating};
     },
   },
 };

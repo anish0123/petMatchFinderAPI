@@ -7,6 +7,16 @@ type User {
   city: String
 }
 
+type UserWithRole {
+  id: ID
+  user_name: String
+  email: String
+  streetAddress: String
+  postalCode: String
+  city: String
+  role: Role
+}
+
 enum Role {
   user
   admin
@@ -22,6 +32,11 @@ type UserResponse {
   message: String!
   token: String
   user: User
+}
+type UserWithRoleResponse {
+  message: String!
+  token: String
+  user: UserWithRole
 }
 
 input Credentials {
@@ -51,7 +66,7 @@ input UserModify {
 type Query {
   users: [User]
   userById(id: ID!): User
-  checkToken: UserResponse!
+  checkToken: UserWithRoleResponse!
   checkRole: String!
 }
 

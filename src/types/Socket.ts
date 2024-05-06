@@ -4,6 +4,9 @@ type ServerToClientEvents = {
   modifyAnimal: (message: string) => void;
   modifyCategory: (message: string) => void;
   deleteCategory: (message: string) => void;
+  addRating: (message: string) => void;
+  modifyRating: (message: string) => void;
+  deleteRating: (message: string) => void;
 };
 
 type ClientToServerEvents = {
