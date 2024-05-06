@@ -3,6 +3,7 @@ import {MyContext} from '../../types/MyContext';
 import {
   AdoptionApplication,
   Animal,
+  Rating,
   User,
   UserInput,
   UserWithoutPasswordRole,
@@ -32,6 +33,28 @@ export default {
       }
       const user = await fetchData<User>(
         process.env.AUTH_URL + '/users/' + parent.adopter,
+      );
+      user.id = user._id;
+      return user;
+    },
+  },
+  Rating: {
+    ratedBy: async (parent: Rating): Promise<UserWithoutPasswordRole> => {
+      if (!process.env.AUTH_URL) {
+        throw new GraphQLError('No auth url set in .env file');
+      }
+      const user = await fetchData<User>(
+        process.env.AUTH_URL + '/users/' + parent.ratedBy,
+      );
+      user.id = user._id;
+      return user;
+    },
+    ratedTo: async (parent: Rating): Promise<UserWithoutPasswordRole> => {
+      if (!process.env.AUTH_URL) {
+        throw new GraphQLError('No auth url set in .env file');
+      }
+      const user = await fetchData<User>(
+        process.env.AUTH_URL + '/users/' + parent.ratedTo,
       );
       user.id = user._id;
       return user;

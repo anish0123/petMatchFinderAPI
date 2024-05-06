@@ -26,7 +26,11 @@ export default {
   },
   Query: {
     animals: async () => {
-      return await animalModel.find();
+      try {
+        return await animalModel.find();
+      } catch (error) {
+        console.error(error);
+      }
     },
     animalById: async (_parent: undefined, args: {id: string}) => {
       try {

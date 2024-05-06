@@ -1,0 +1,40 @@
+type Rating {
+  id: ID!
+  rating: Float!
+  ratedBy: User!
+  ratedTo: User!
+  ratedDate: DateTime!
+  description: String!
+}
+
+type Query {
+  ratings: [Rating]
+  ratingById(id: ID!): Rating
+  ratingByRatingUser(ratedBy: ID!): [Rating]
+  ratingByRatedToUser(ratedTo: ID!): [Rating]
+}
+
+input RatingInput {
+  rating: Float!
+  ratedTo: ID!
+  ratedDate: DateTime!
+  description: String!
+}
+
+input RatingModify {
+   rating: Float
+  ratedTo: ID
+  ratedDate: DateTime
+  description: String
+}
+
+type RatingMessage {
+  message: String!
+  rating: Rating
+}
+
+type Mutation {
+  addRating(rating: RatingInput!): RatingMessage
+  modifyRating(id: ID!, rating: RatingModify!): RatingMessage
+  deleteRating(id: ID!): RatingMessage
+}

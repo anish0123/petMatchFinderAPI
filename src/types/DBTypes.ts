@@ -30,6 +30,14 @@ type User = Partial<Document> & {
   city: string;
 };
 
+type Rating = Partial<Document> & {
+  rating: number;
+  ratedBy: mongoose.Types.ObjectId;
+  ratedTo: mongoose.Types.ObjectId;
+  description: string;
+  ratedDate: Date;
+};
+
 type AdoptionApplication = Partial<Document> & {
   animal: mongoose.Types.ObjectId;
   adopter: mongoose.Types.ObjectId;
@@ -70,4 +78,5 @@ export {
   UserWithoutPasswordRole,
   coordinates,
   LocationInput,
+  Rating,
 };
