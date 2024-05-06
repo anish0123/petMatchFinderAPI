@@ -74,6 +74,13 @@ export default {
       };
       return response;
     },
+    checkRole: async (
+      _parent: undefined,
+      _args: undefined,
+      context: MyContext,
+    ) => {
+      return context.userdata?.user.role;
+    },
   },
   Mutation: {
     register: async (

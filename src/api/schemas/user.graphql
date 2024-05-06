@@ -52,6 +52,7 @@ type Query {
   users: [User]
   userById(id: ID!): User
   checkToken: UserResponse!
+  checkRole: String!
 }
 
 type Mutation {
