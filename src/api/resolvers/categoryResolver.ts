@@ -67,6 +67,7 @@ export default {
         })
         .select(' -__v');
       if (category) {
+        socket.emit('update', 'modifyCategory');
         return {message: 'Category updated', category: category};
       } else {
         throw new Error('Category not updated');
@@ -90,6 +91,7 @@ export default {
         .findByIdAndDelete(args.id)
         .select(' -__v');
       if (category) {
+        socket.emit('update', 'deleteCategory');
         return {message: 'Category deleted', category: category};
       } else {
         throw new Error('Category not deleted');
