@@ -54,7 +54,6 @@ const putCategory = (
   const category = {
     category_name: 'modifitedCategory',
   };
-  console.log('id: ', id);
   return new Promise((resolve, reject) => {
     request(url)
       .post('/graphql')
@@ -79,7 +78,6 @@ const putCategory = (
         if (err) {
           reject(err);
         } else {
-          console.log('response.body :', response.body);
           const categoryData = response.body.data.modifyCategory;
           expect(categoryData).toHaveProperty('message');
           expect(categoryData).toHaveProperty('category');
@@ -121,7 +119,6 @@ const deleteCategory = (
         if (err) {
           reject(err);
         } else {
-          console.log('response.body :', response.body.data.deleteCategory);
           const categoryData = response.body.data.deleteCategory;
           expect(categoryData).toHaveProperty('message');
           expect(categoryData).toHaveProperty('category');

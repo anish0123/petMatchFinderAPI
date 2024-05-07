@@ -1,3 +1,4 @@
+import {Point} from 'geojson';
 import {UserWithoutPasswordRole} from './DBTypes';
 
 type MessageResponse = {
@@ -16,5 +17,17 @@ type ErrorResponse = MessageResponse & {
 type UserResponse = MessageResponse & {
   user: UserWithoutPasswordRole;
 };
+type UploadResponse = MessageResponse & {
+  data: {
+    filename: string;
+    location: Point;
+  };
+};
 
-export {MessageResponse, ErrorResponse, LoginResponse, UserResponse};
+export {
+  MessageResponse,
+  ErrorResponse,
+  LoginResponse,
+  UserResponse,
+  UploadResponse,
+};

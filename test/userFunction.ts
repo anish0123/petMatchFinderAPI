@@ -9,7 +9,6 @@ const login = (
   url: string | Application,
   input: {email: string; password: string},
 ): Promise<LoginResponse> => {
-  console.log('input: ', input);
   return new Promise((resolve, reject) => {
     request(url)
       .post('/graphql')
@@ -34,7 +33,6 @@ const login = (
         if (err) {
           reject(err);
         } else {
-          console.log('response: ', response.body);
           const user = input;
           const userData = response.body.data.login;
           expect(userData).toHaveProperty('message');
@@ -74,7 +72,6 @@ const postUser = (
         if (err) {
           reject(err);
         } else {
-          console.log('response.body :', response.body);
           const userData = response.body.data.register;
           expect(userData).toHaveProperty('message');
           expect(userData).toHaveProperty('user');
@@ -119,7 +116,6 @@ const putUser = (
         if (err) {
           reject(err);
         } else {
-          console.log('response.body: ', response.body);
           const userData = response.body.data.updateUser;
           expect(userData).toHaveProperty('message');
           expect(userData).toHaveProperty('user');
@@ -194,7 +190,6 @@ const deleteUserAsAdmin = (
         if (err) {
           reject(err);
         } else {
-          console.log('response.body: ', response.body);
           const userData = response.body.data.deleteUserAsAdmin;
           expect(userData).toHaveProperty('message');
           expect(userData).toHaveProperty('user');
