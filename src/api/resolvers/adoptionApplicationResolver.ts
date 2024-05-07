@@ -56,8 +56,9 @@ export default {
       _parent: undefined,
       args: {input: Omit<AdoptionApplication, '_id'>},
       context: MyContext,
-    ) => {
+    ): Promise<{message: string; adoptionApplication: AdoptionApplication}> => {
       console.log('args: ', args);
+      args.input.applicationStatus = 'pending';
       if (!context.userdata) {
         throw new GraphQLError('User not authenticated', {
           extensions: {code: 'UNAUTHENTICATED'},
@@ -81,15 +82,73 @@ export default {
       if (!newAdoptionApplication) {
         throw new Error('Error adding application');
       }
-      return newAdoptionApplication;
+      return {
+        message: 'adoption application created',
+        adoptionApplication: newAdoptionApplication,
+      };
     },
     modifyAdoptionApplication: async (
       _parent: undefined,
       args: {id: string; input: Omit<AdoptionApplication, '_id'>},
       context: MyContext,
+    ): Promise<{message: string; adoptionApplication: AdoptionApplication}> => {
+      if (!context.userdata) {
+        throw new GraphQLError('User not authenticated', {
+          extensions: {code: 'UNAUTHENTICATED'},
+        });
+      }
+      const filter = {_id: args.id, adopter: context.userdata.user._id};
+      if (context.userdata.user.role === 'admin') {
+        delete filter.adopter;
+      }
+      if (
+        args.input.applicationStatus &&
+        args.input.applicationStatus !== 'pending' &&
+        context.userdata.user.role !== 'admin'
+      ) {
+        const application = await adoptionApplicationModel.findById(args.id);
+        const animal = await animalModel.findById(application?.animal);
+        if (animal?.owner._id.toString() !== context.userdata.user._id) {
+          throw new GraphQLError('User not authorized', {
+            extensions: {code: 'UNAUTHORIZED'},
+          });
+        }
+        delete filter.adopter;
+      }
+      const adoptionApplication =
+        await adoptionApplicationModel.findOneAndUpdate(filter, args.input, {
+          new: true,
+        });
+      if (!adoptionApplication) {
+        throw new Error('Error modifying application');
+      }
+      if (adoptionApplication.applicationStatus === 'approved') {
+        const animal = await animalModel.findById(adoptionApplication.animal);
+        if (animal) {
+          animal.adoptionStatus = 'adopted';
+          await animal.save();
+        }
+        const applications = await adoptionApplicationModel.find({
+          animal: animal?._id,
+        });
+        applications.forEach(async (application) => {
+          if (application._id.toString() !== args.id) {
+            application.applicationStatus = 'rejected';
+            await application.save();
+          }
+        });
+      }
+      return {
+        message: 'adoption application updated',
+        adoptionApplication: adoptionApplication,
+      };
+    },
+    deleteAdoptionApplication: async (
+      _parent: undefined,
+      args: {id: string},
+      context: MyContext,
     ) => {
       try {
-        console.log('input: ', args.input);
         if (!context.userdata) {
           throw new GraphQLError('User not authenticated', {
             extensions: {code: 'UNAUTHENTICATED'},
@@ -99,68 +158,19 @@ export default {
         if (context.userdata.user.role === 'admin') {
           delete filter.adopter;
         }
-        if (
-          args.input.applicationStatus &&
-          args.input.applicationStatus !== 'pending' &&
-          context.userdata.user.role !== 'admin'
-        ) {
-          const application = await adoptionApplicationModel.findById(args.id);
-          const animal = await animalModel.findById(application?.animal);
-          if (animal?.owner._id.toString() !== context.userdata.user._id) {
-            throw new GraphQLError('User not authorized', {
-              extensions: {code: 'UNAUTHORIZED'},
-            });
-          }
-          delete filter.adopter;
+        const deletedApplication =
+          await adoptionApplicationModel.findOneAndDelete(filter);
+        if (!deletedApplication) {
+          throw new Error('Error deleting application');
         }
-        const adoptionApplication =
-          await adoptionApplicationModel.findOneAndUpdate(filter, args.input, {
-            new: true,
-          });
-        if (!adoptionApplication) {
-          throw new Error('Error modifying application');
-        }
-        if (adoptionApplication.applicationStatus === 'approved') {
-          const animal = await animalModel.findById(adoptionApplication.animal);
-          if (animal) {
-            animal.adoptionStatus = 'adopted';
-            await animal.save();
-          }
-          const applications = await adoptionApplicationModel.find({
-            animal: animal?._id,
-          });
-          applications.forEach(async (application) => {
-            if (application._id.toString() !== args.id) {
-              application.applicationStatus = 'rejected';
-              await application.save();
-            }
-          });
-        }
-        return adoptionApplication;
+        console.log('deletedApplication: ', deletedApplication);
+        return {
+          message: 'adoption application deleted',
+          adoptionApplication: deletedApplication,
+        };
       } catch (error) {
         console.error(error);
       }
-    },
-    deleteAdoptionApplication: async (
-      _parent: undefined,
-      args: {id: string},
-      context: MyContext,
-    ): Promise<AdoptionApplication> => {
-      if (!context.userdata) {
-        throw new GraphQLError('User not authenticated', {
-          extensions: {code: 'UNAUTHENTICATED'},
-        });
-      }
-      const filter = {_id: args.id, owner: context.userdata.user._id};
-      if (context.userdata.user.role === 'admin') {
-        delete filter.owner;
-      }
-      const deletedApplication =
-        await adoptionApplicationModel.findOneAndDelete(filter);
-      if (!deletedApplication) {
-        throw new Error('Error deleting application');
-      }
-      return deletedApplication;
     },
   },
 };

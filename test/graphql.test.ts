@@ -2,7 +2,12 @@ import mongoose from 'mongoose';
 import {getNotFound} from './testFunction';
 import app from '../src/app';
 import {LoginResponse, UploadResponse} from '../src/types/MessageTypes';
-import {Animal, Category, UserInput} from '../src/types/DBTypes';
+import {
+  AdoptionApplication,
+  Animal,
+  Category,
+  UserInput,
+} from '../src/types/DBTypes';
 import {
   deleteUser,
   deleteUserAsAdmin,
@@ -23,6 +28,11 @@ import {
   postFile,
   putAnimal,
 } from './animalFunction';
+import {
+  deleteAdoptionApplication,
+  postAdoptionApplication,
+  putAdoptionApplication,
+} from './adoptionApplicationFunction';
 
 const uploadApp = process.env.UPLOAD_URL as string;
 
@@ -132,11 +142,11 @@ describe('Testing graphql api for Pet Match Finder app', () => {
       image: uploadData.data.filename,
       gender: 'male',
     };
-    animal = await postAnimal(app, animalInput, adminData.token!);
+    animal = await postAnimal(app, animalInput, userData.token!);
   });
 
   it('should update the animal', async () => {
-    await putAnimal(app, animal.id, adminData.token);
+    await putAnimal(app, animal.id, userData.token);
   });
 
   it('should return all animals', async () => {
@@ -148,11 +158,39 @@ describe('Testing graphql api for Pet Match Finder app', () => {
   });
 
   it('should return animals by owner', async () => {
-    await getAnimalByOwner(app, adminData.user.id);
+    await getAnimalByOwner(app, userData.user.id);
+  });
+
+  let adoptionApplication: AdoptionApplication;
+
+  it('should add adoptionApplication', async () => {
+    const application = {
+      appliedDate: new Date(),
+      description: 'testDescription',
+      animal: animal.id,
+    };
+    adoptionApplication = await postAdoptionApplication(
+      app,
+      application,
+      userData.token,
+    );
+    console.log('adoptionApplication: ', adoptionApplication);
+  });
+
+  it('should modify adoptionApplication', async () => {
+    await putAdoptionApplication(app, adoptionApplication.id, userData.token);
+  });
+
+  it('should delete adoptionApplication', async () => {
+    await deleteAdoptionApplication(
+      app,
+      adoptionApplication.id,
+      userData.token,
+    );
   });
 
   it('should delete animal', async () => {
-    await deleteAnimal(app, adminData.token, animal.id);
+    await deleteAnimal(app, userData.token, animal.id);
   });
 
   it('should delete category', async () => {

@@ -142,7 +142,7 @@ export default {
       }
       const deletedAnimal = await animalModel.findOneAndDelete(filter);
       if (!deletedAnimal) {
-        throw new Error('Cat not found');
+        throw new Error('Animal not found');
       }
       return {message: 'Animal deleted', animal: deletedAnimal};
     },

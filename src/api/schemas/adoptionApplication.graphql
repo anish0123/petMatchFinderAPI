@@ -26,7 +26,6 @@ input AdoptionApplicationInput {
   animal: ID!
   appliedDate: DateTime!
   description: String!
-  applicationStatus: ApplicationStatus!
 }
 input AdoptionApplicationModify {
   animal: ID
@@ -35,8 +34,13 @@ input AdoptionApplicationModify {
   applicationStatus: ApplicationStatus
 }
 
+type AdoptionApplicationMessage {
+  message: String!
+  adoptionApplication: AdoptionApplication
+}
+
 type Mutation {
-  addAdoptionApplication(input: AdoptionApplicationInput!): AdoptionApplication
-  modifyAdoptionApplication(id: ID!, input: AdoptionApplicationModify!): AdoptionApplication
-  deleteAdoptionApplication(id: ID!): AdoptionApplication
+  addAdoptionApplication(input: AdoptionApplicationInput!): AdoptionApplicationMessage!
+  modifyAdoptionApplication(id: ID!, input: AdoptionApplicationModify!): AdoptionApplicationMessage!
+  deleteAdoptionApplication(id: ID!): AdoptionApplicationMessage!
 }
