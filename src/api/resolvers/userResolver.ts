@@ -9,7 +9,11 @@ import {
   UserWithoutPasswordRole,
 } from '../../types/DBTypes';
 import fetchData from '../../lib/fetchData';
-import {MessageResponse} from '../../types/MessageTypes';
+import {
+  LoginResponse,
+  MessageResponse,
+  UserResponse,
+} from '../../types/MessageTypes';
 
 export default {
   Animal: {
@@ -97,22 +101,16 @@ export default {
       };
       return response;
     },
-    checkRole: async (
-      _parent: undefined,
-      _args: undefined,
-      context: MyContext,
-    ) => {
-      return context.userdata?.user.role;
-    },
   },
   Mutation: {
     register: async (
       _parent: undefined,
       args: {user: User},
-    ): Promise<{message: string; user: UserWithoutPasswordRole}> => {
+    ): Promise<UserResponse> => {
       if (!process.env.AUTH_URL) {
         throw new GraphQLError('No auth url set in .env file');
       }
+      args.user.role = 'user';
       const options = {
         method: 'POST',
         headers: {
@@ -123,15 +121,12 @@ export default {
       const registerResponse = await fetchData<
         MessageResponse & {data: UserWithoutPasswordRole}
       >(process.env.AUTH_URL + '/users', options);
-      console.log('registerResponse: ', registerResponse);
       return {user: registerResponse.data, message: registerResponse.message};
     },
     login: async (
       _parent: undefined,
       args: {credentials: {email: string; password: string}},
-    ): Promise<
-      MessageResponse & {token: string; user: UserWithoutPasswordRole}
-    > => {
+    ): Promise<LoginResponse> => {
       if (!process.env.AUTH_URL) {
         throw new GraphQLError('No auth url set in .env file');
       }
@@ -152,7 +147,7 @@ export default {
       _parent: undefined,
       args: {user: UserInput},
       context: MyContext,
-    ) => {
+    ): Promise<LoginResponse> => {
       if (!context.userdata) {
         throw new GraphQLError('User not authenticated', {
           extensions: {code: 'UNAUTHENTICATED'},
@@ -166,17 +161,18 @@ export default {
         },
         body: JSON.stringify(args.user),
       };
-      const user = await fetchData<
-        MessageResponse & {data: UserWithoutPasswordRole}
-      >(process.env.AUTH_URL + '/users', options);
+      const user = await fetchData<LoginResponse>(
+        process.env.AUTH_URL + '/users',
+        options,
+      );
       console.log('user: ', user);
-      return user;
+      return {message: 'user updated', user: user.user, token: user.token};
     },
     deleteUser: async (
       _parent: undefined,
       _args: undefined,
       context: MyContext,
-    ): Promise<{message: string; data: UserWithoutPasswordRole}> => {
+    ): Promise<UserResponse> => {
       if (!context.userdata) {
         throw new GraphQLError('User not authenticated', {
           extensions: {code: 'UNAUTHENTICATED'},
@@ -189,15 +185,15 @@ export default {
         },
       };
       const user = await fetchData<
-        MessageResponse & {data: UserWithoutPasswordRole}
+        MessageResponse & {user: UserWithoutPasswordRole}
       >(process.env.AUTH_URL + '/users', options);
-      return user;
+      return {message: 'user deleted', user: user.user};
     },
     deleteUserAsAdmin: async (
       _parent: undefined,
       args: {id: string},
       context: MyContext,
-    ): Promise<{message: string; data: UserWithoutPasswordRole}> => {
+    ): Promise<UserResponse> => {
       if (!context.userdata) {
         throw new GraphQLError('User not authenticated', {
           extensions: {code: 'UNAUTHENTICATED'},
@@ -217,7 +213,7 @@ export default {
       const user = await fetchData<
         MessageResponse & {data: UserWithoutPasswordRole}
       >(process.env.AUTH_URL + `/users/${args.id}`, options);
-      return user;
+      return {message: 'user deleted', user: user.data};
     },
   },
 };

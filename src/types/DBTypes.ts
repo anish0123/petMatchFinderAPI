@@ -14,6 +14,7 @@ type Animal = Partial<Document> & {
   owner: mongoose.Types.ObjectId;
   gender: 'male' | 'female';
   image: string;
+  price: number;
   location: Point;
   weight: number;
   listedDate: Date;
@@ -25,9 +26,6 @@ type User = Partial<Document> & {
   email: string;
   password: string;
   role: 'user' | 'admin';
-  streetAddress: string;
-  postalCode: String;
-  city: string;
 };
 
 type Rating = Partial<Document> & {

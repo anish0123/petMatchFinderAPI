@@ -2,18 +2,12 @@ type User {
   id: ID
   user_name: String
   email: String
-  streetAddress: String
-  postalCode: String
-  city: String
 }
 
 type UserWithRole {
   id: ID
   user_name: String
   email: String
-  streetAddress: String
-  postalCode: String
-  city: String
   role: Role
 }
 
@@ -30,7 +24,6 @@ type LoginResponse {
 
 type UserResponse {
   message: String!
-  token: String
   user: User
 }
 type UserWithRoleResponse {
@@ -48,39 +41,24 @@ input UserInput {
   user_name: String!
   email: String!
   password: String!
-  streetAddress: String!
-  postalCode: String!
-  city: String!
-  role: Role!
 }
 
 input UserModify {
   user_name: String
   email: String
   password: String
-  streetAddress: String
-  postalCode: String
-  city: String
 }
 
 type Query {
   users: [User]
   userById(id: ID!): User
   checkToken: UserWithRoleResponse!
-  checkRole: String!
 }
 
 type Mutation {
   login(credentials: Credentials!): LoginResponse
   register(user: UserInput!): UserResponse
-  updateUser(user: UserModify!): UserResponse
+  updateUser(user: UserModify!): LoginResponse
   deleteUser: UserResponse
-  """
-  Separate mutations for admin because of rest api
-  """
-  updateUserAsAdmin(user: UserModify!, id: ID!): UserResponse
-  """
-  Separate mutations for admin because of rest api
-  """
   deleteUserAsAdmin(id: ID!): UserResponse
 }
