@@ -130,6 +130,7 @@ export default {
       if (!deletedRating) {
         throw new Error('Rating not found');
       }
+      socket.emit('update', 'deleteRating');
       return {message: 'Rating deleted', rating: deletedRating};
     },
   },
