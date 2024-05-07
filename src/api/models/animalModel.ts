@@ -14,6 +14,12 @@ const animalModel = new mongoose.Schema<Animal>({
   weight: {
     type: Number,
     required: true,
+    min: [0, 'Weight cannot be negative.'],
+  },
+  price: {
+    type: Number,
+    required: true,
+    min: [0, 'Price cannot be negative.'],
   },
   birthdate: {
     type: Date,

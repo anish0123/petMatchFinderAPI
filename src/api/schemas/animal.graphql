@@ -12,6 +12,7 @@ type Animal {
   location: Location!
   listedDate: DateTime!
   weight: Float!
+  price: Float!
   adoptionStatus: AdoptionStatus!
 }
 
@@ -58,6 +59,7 @@ input AnimalInput {
   weight: Float!
   description: String!
   adoptionStatus: AdoptionStatus!
+  price: Float!
 }
 
 input AnimalModify {
@@ -69,6 +71,7 @@ input AnimalModify {
   location: LocationInput
   listedDate: DateTime
   weight: Float
+  price: Float
   description: String
   adoptionStatus: AdoptionStatus
 }
