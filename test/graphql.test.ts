@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import {getNotFound} from './testFunction';
 import app from '../src/app';
 import {LoginResponse} from '../src/types/MessageTypes';
-import {UserInput} from '../src/types/DBTypes';
+import {Category, UserInput} from '../src/types/DBTypes';
 import {
   deleteUser,
   deleteUserAsAdmin,
@@ -13,6 +13,7 @@ import {
   putUser,
 } from './userFunction';
 import randomstring from 'randomstring';
+import {deleteCategory, postCategory, putCategory} from './categoryFunction';
 
 describe('Testing graphql api for Pet Match Finder app', () => {
   beforeAll(async () => {
@@ -31,6 +32,7 @@ describe('Testing graphql api for Pet Match Finder app', () => {
   let userData: LoginResponse;
   let userData2: LoginResponse;
   let adminData: LoginResponse;
+  let category: Category;
 
   const testUser: UserInput = {
     user_name: 'testUser' + randomstring.generate(5),
@@ -99,5 +101,18 @@ describe('Testing graphql api for Pet Match Finder app', () => {
 
   it('should delete second user by admin', async () => {
     await deleteUserAsAdmin(app, adminData.token, userData2.user.id);
+  });
+
+  it('should add category', async () => {
+    category = await postCategory(app, adminData.token);
+    console.log('graphql: ', category);
+  });
+
+  it('should update category', async () => {
+    await putCategory(app, adminData.token, category.id);
+  });
+
+  it('should delete category', async () => {
+    await deleteCategory(app, adminData.token, category.id);
   });
 });

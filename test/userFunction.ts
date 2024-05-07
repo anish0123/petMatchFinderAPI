@@ -176,12 +176,12 @@ const deleteUserAsAdmin = (
       .set('Content-type', 'application/json')
       .set('Authorization', 'Bearer ' + token)
       .send({
-        query: `mutation DeleteUser {
-          deleteUser {
+        query: `mutation DeleteUser($deleteUserAsAdminId: ID!) {
+          deleteUserAsAdmin(id: $deleteUserAsAdminId) {
             message
             user {
-              id
               email
+              id
               user_name
             }
           }
@@ -194,10 +194,11 @@ const deleteUserAsAdmin = (
         if (err) {
           reject(err);
         } else {
-          const userData = response.body.data.deleteUser;
+          console.log('response.body: ', response.body);
+          const userData = response.body.data.deleteUserAsAdmin;
           expect(userData).toHaveProperty('message');
           expect(userData).toHaveProperty('user');
-          resolve(response.body.data.deleteUser);
+          resolve(response.body.data.deleteUserAsAdmin);
         }
       });
   });

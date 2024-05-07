@@ -211,9 +211,9 @@ export default {
         },
       };
       const user = await fetchData<
-        MessageResponse & {data: UserWithoutPasswordRole}
+        MessageResponse & {user: UserWithoutPasswordRole}
       >(process.env.AUTH_URL + `/users/${args.id}`, options);
-      return {message: 'user deleted', user: user.data};
+      return {message: 'user deleted', user: user.user};
     },
   },
 };

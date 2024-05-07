@@ -1,8 +1,7 @@
 import {Point} from 'geojson';
 import mongoose, {Document} from 'mongoose';
 
-type Category = {
-  _id: mongoose.Types.ObjectId;
+type Category = Partial<Document> & {
   category_name: string;
 };
 
