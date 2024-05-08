@@ -16,18 +16,6 @@ import {
 } from '../../types/MessageTypes';
 
 export default {
-  Animal: {
-    owner: async (parent: Animal): Promise<UserWithoutPasswordRole> => {
-      if (!process.env.AUTH_URL) {
-        throw new GraphQLError('No auth url set in .env file');
-      }
-      const user = await fetchData<User>(
-        process.env.AUTH_URL + '/users/' + parent.owner,
-      );
-      user.id = user._id;
-      return user;
-    },
-  },
   AdoptionApplication: {
     adopter: async (
       parent: AdoptionApplication,
@@ -37,6 +25,18 @@ export default {
       }
       const user = await fetchData<User>(
         process.env.AUTH_URL + '/users/' + parent.adopter,
+      );
+      user.id = user._id;
+      return user;
+    },
+  },
+  Animal: {
+    owner: async (parent: Animal): Promise<UserWithoutPasswordRole> => {
+      if (!process.env.AUTH_URL) {
+        throw new GraphQLError('No auth url set in .env file');
+      }
+      const user = await fetchData<User>(
+        process.env.AUTH_URL + '/users/' + parent.owner,
       );
       user.id = user._id;
       return user;
@@ -103,26 +103,6 @@ export default {
     },
   },
   Mutation: {
-    register: async (
-      _parent: undefined,
-      args: {user: User},
-    ): Promise<UserResponse> => {
-      if (!process.env.AUTH_URL) {
-        throw new GraphQLError('No auth url set in .env file');
-      }
-      args.user.role = 'user';
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(args.user),
-      };
-      const registerResponse = await fetchData<
-        MessageResponse & {data: UserWithoutPasswordRole}
-      >(process.env.AUTH_URL + '/users', options);
-      return {user: registerResponse.data, message: registerResponse.message};
-    },
     login: async (
       _parent: undefined,
       args: {credentials: {email: string; password: string}},
@@ -142,6 +122,26 @@ export default {
       >(process.env.AUTH_URL + '/auth/login', options);
       loginResponse.user.id = loginResponse.user._id;
       return loginResponse;
+    },
+    register: async (
+      _parent: undefined,
+      args: {user: User},
+    ): Promise<UserResponse> => {
+      if (!process.env.AUTH_URL) {
+        throw new GraphQLError('No auth url set in .env file');
+      }
+      args.user.role = 'user';
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(args.user),
+      };
+      const registerResponse = await fetchData<
+        MessageResponse & {data: UserWithoutPasswordRole}
+      >(process.env.AUTH_URL + '/users', options);
+      return {user: registerResponse.data, message: registerResponse.message};
     },
     updateUser: async (
       _parent: undefined,

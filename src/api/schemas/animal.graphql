@@ -16,6 +16,13 @@ type Animal {
   adoptionStatus: AdoptionStatus!
 }
 
+type Query {
+  animals: [Animal]
+  animalById(id: ID!): Animal
+  animalsByArea(topRight: Coordinates!, bottomLeft: Coordinates!): [Animal]
+  animalsByOwner(ownerId: ID!): [Animal]
+}
+
 enum Gender {
   male
   female
@@ -31,6 +38,8 @@ type Location {
   coordinates: [Float]!
 }
 
+
+
 input Coordinates {
   lat: Float!
   lng: Float!
@@ -39,13 +48,6 @@ input Coordinates {
 input LocationInput {
   type: String!
   coordinates: [Float]!
-}
-
-type Query {
-  animals: [Animal]
-  animalById(id: ID!): Animal
-  animalsByArea(topRight: Coordinates!, bottomLeft: Coordinates!): [Animal]
-  animalsByOwner(ownerId: ID!): [Animal]
 }
 
 input AnimalInput {

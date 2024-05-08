@@ -57,7 +57,6 @@ export default {
       args: {input: Omit<AdoptionApplication, '_id'>},
       context: MyContext,
     ): Promise<{message: string; adoptionApplication: AdoptionApplication}> => {
-      console.log('args: ', args);
       args.input.applicationStatus = 'pending';
       if (!context.userdata) {
         throw new GraphQLError('User not authenticated', {

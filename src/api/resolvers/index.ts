@@ -5,9 +5,9 @@ import ratingResolver from './ratingResolver';
 import userResolver from './userResolver';
 
 export default [
-  animalResolver,
-  userResolver,
-  categoryResolver,
   adoptionApplicationResolver,
+  animalResolver,
+  categoryResolver,
   ratingResolver,
+  userResolver,
 ];

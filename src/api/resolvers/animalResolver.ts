@@ -46,19 +46,7 @@ export default {
         console.log('error: ', error);
       }
     },
-    animalsByOwner: async (_parent: undefined, args: {ownerId: string}) => {
-      try {
-        const animals = await animalModel.find({owner: args.ownerId});
-        if (animals.length === 0) {
-          throw new GraphQLError('No animals found', {
-            extensions: {code: 'NOT_FOUND'},
-          });
-        }
-        return animals;
-      } catch (error) {
-        console.error('error: ', error);
-      }
-    },
+
     animalsByArea: async (
       _parent: undefined,
       args: {topRight: coordinates; bottomLeft: coordinates},
@@ -79,6 +67,19 @@ export default {
         });
       }
       return animals;
+    },
+    animalsByOwner: async (_parent: undefined, args: {ownerId: string}) => {
+      try {
+        const animals = await animalModel.find({owner: args.ownerId});
+        if (animals.length === 0) {
+          throw new GraphQLError('No animals found', {
+            extensions: {code: 'NOT_FOUND'},
+          });
+        }
+        return animals;
+      } catch (error) {
+        console.error('error: ', error);
+      }
     },
   },
   Mutation: {

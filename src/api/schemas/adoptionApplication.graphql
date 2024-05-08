@@ -8,6 +8,12 @@ type AdoptionApplication {
   description: String!
   applicationStatus: ApplicationStatus
 }
+type Query {
+  adoptionApplications: [AdoptionApplication]
+  adoptionApplicationById(id: ID!): AdoptionApplication
+  adoptionApplicationsByAnimal(animalId: ID!): [AdoptionApplication]
+  adoptionApplicationsByAdopter(adopterId: ID!): [AdoptionApplication]
+}
 
 enum ApplicationStatus {
   pending
@@ -15,12 +21,7 @@ enum ApplicationStatus {
   rejected
 }
 
-type Query {
-  adoptionApplications: [AdoptionApplication]
-  adoptionApplicationById(id: ID!): AdoptionApplication
-  adoptionApplicationsByAnimal(animalId: ID!): [AdoptionApplication]
-  adoptionApplicationsByAdopter(adopterId: ID!): [AdoptionApplication]
-}
+
 
 input AdoptionApplicationInput {
   animal: ID!
