@@ -3,6 +3,7 @@ import mongoConnect from './lib/db';
 
 const port = process.env.PORT || 3000;
 console.log('starting server');
+console.log('port: ', port);
 (async () => {
   console.log('inside async function');
   try {
