@@ -22,12 +22,12 @@ export default {
         console.error(error);
       }
     },
-    adoptionApplicationsByAdopter: async (
+    adoptionApplicationsByAnimal: async (
       _parent: undefined,
-      args: {adopterId: string},
+      args: {animalId: string},
     ) => {
       const applications = await adoptionApplicationModel.find({
-        adopter: args.adopterId,
+        animal: args.animalId,
       });
       if (applications.length === 0) {
         throw new GraphQLError('No applications found', {
@@ -36,12 +36,12 @@ export default {
       }
       return applications;
     },
-    adoptionApplicationsByAnimal: async (
+    adoptionApplicationsByAdopter: async (
       _parent: undefined,
-      args: {animalId: string},
+      args: {adopterId: string},
     ) => {
       const applications = await adoptionApplicationModel.find({
-        animal: args.animalId,
+        adopter: args.adopterId,
       });
       if (applications.length === 0) {
         throw new GraphQLError('No applications found', {
