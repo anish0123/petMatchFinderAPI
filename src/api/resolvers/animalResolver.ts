@@ -4,6 +4,7 @@ import {AdoptionApplication, Animal, coordinates} from '../../types/DBTypes';
 import {MyContext} from '../../types/MyContext';
 import {Socket, io} from 'socket.io-client';
 import {ClientToServerEvents, ServerToClientEvents} from '../../types/Socket';
+import adoptionApplication from '../models/adoptionApplication';
 
 if (!process.env.SOCKET_URL) {
   throw new Error('SOCKET_URL not defined');
@@ -140,6 +141,7 @@ export default {
       if (context.userdata.user.role === 'admin') {
         delete filter.owner;
       }
+      await adoptionApplication.deleteMany({animal: args.id});
       const deletedAnimal = await animalModel.findOneAndDelete(filter);
       if (!deletedAnimal) {
         throw new Error('Animal not found');

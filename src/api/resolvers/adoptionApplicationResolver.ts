@@ -76,6 +76,15 @@ export default {
         });
       }
       args.input.adopter = context.userdata.user._id;
+      const previousApplication = await adoptionApplicationModel.findOne({
+        adopter: args.input.adopter,
+        animal: args.input.animal,
+      });
+      if (previousApplication) {
+        throw new GraphQLError('Application can not be adopted twice', {
+          extensions: {code: 'BAD_REQUEST'},
+        });
+      }
       const newAdoptionApplication = await adoptionApplicationModel.create(
         args.input,
       );
