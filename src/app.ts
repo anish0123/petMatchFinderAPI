@@ -33,6 +33,7 @@ app.use(
 
 (async () => {
   try {
+    console.log('working till rateLimi');
     const rateLimitRule = createRateLimitRule({
       identifyContext: (ctx) => {
         return ctx.userdata?._id ? ctx.userdata._id : ctx.id;
@@ -43,6 +44,7 @@ app.use(
         login: rateLimitRule({max: 5, window: '10s'}),
       },
     });
+    console.log('working after permission');
 
     const executableSchema = makeExecutableSchema({
       typeDefs: [constraintDirectiveTypeDefs, typeDefs],
@@ -63,6 +65,7 @@ app.use(
       ],
       includeStacktraceInErrorResponses: false,
     });
+    console.log('working after server introduction');
     await server.start();
 
     app.get('/', (_req: Request, res: Response<MessageResponse>) => {
@@ -70,6 +73,7 @@ app.use(
         message: 'API location: graphql',
       });
     });
+    console.log('working after server introduction');
 
     app.use(
       '/graphql',
