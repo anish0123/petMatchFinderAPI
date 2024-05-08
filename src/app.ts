@@ -19,6 +19,7 @@ import {MyContext} from './types/MyContext';
 import {createRateLimitRule} from 'graphql-rate-limit';
 import {shield} from 'graphql-shield';
 import {constraintDirectiveTypeDefs} from 'graphql-constraint-directive';
+import {MessageResponse} from './types/MessageTypes';
 
 const app = express();
 
@@ -62,6 +63,12 @@ app.use(
       includeStacktraceInErrorResponses: false,
     });
     await server.start();
+
+    app.get<{}, MessageResponse>('/', (req, res) => {
+      res.json({
+        message: 'API location: graphql',
+      });
+    });
 
     app.use(
       '/graphql',

@@ -6,6 +6,7 @@ import {
   AdoptionApplication,
   Animal,
   Category,
+  Rating,
   UserInput,
 } from '../src/types/DBTypes';
 import {
@@ -33,6 +34,7 @@ import {
   postAdoptionApplication,
   putAdoptionApplication,
 } from './adoptionApplicationFunction';
+import {postRating, putRating} from './ratingFunction';
 
 const uploadApp = process.env.UPLOAD_URL as string;
 
@@ -179,6 +181,22 @@ describe('Testing graphql api for Pet Match Finder app', () => {
 
   it('should modify adoptionApplication', async () => {
     await putAdoptionApplication(app, adoptionApplication.id, userData.token);
+  });
+
+  let rating: Rating;
+
+  it('should add rating', async () => {
+    const ratingInput: Omit<Rating, 'id' | 'ratedBy'> = {
+      rating: 5,
+      description: 'testDescription',
+      ratedTo: userData2.user.id,
+      ratedDate: new Date(),
+    };
+    rating = await postRating(app, ratingInput, userData.token);
+  });
+
+  it('should modify rating', async () => {
+    await putRating(app, rating.id, userData.token);
   });
 
   it('should delete adoptionApplication', async () => {
