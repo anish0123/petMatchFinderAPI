@@ -13,7 +13,9 @@ if (!process.env.SOCKET_URL) {
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
   process.env.SOCKET_URL,
 );
-
+/**
+ *
+ */
 export default {
   Animal: {
     category: async (parent: Animal): Promise<Category> => {

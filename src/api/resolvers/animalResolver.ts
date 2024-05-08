@@ -6,6 +6,7 @@ import {Socket, io} from 'socket.io-client';
 import {ClientToServerEvents, ServerToClientEvents} from '../../types/Socket';
 import adoptionApplication from '../models/adoptionApplication';
 
+//Checking for socket url
 if (!process.env.SOCKET_URL) {
   throw new Error('SOCKET_URL not defined');
 }
@@ -14,7 +15,9 @@ if (!process.env.SOCKET_URL) {
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
   process.env.SOCKET_URL as string,
 );
-
+/**
+ * Resolver for animal
+ */
 export default {
   AdoptionApplication: {
     animal: async (parent: AdoptionApplication): Promise<Animal> => {

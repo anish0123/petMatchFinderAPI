@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
 import {AdoptionApplication} from '../../types/DBTypes';
 
+/**
+ * Schema for adoption application
+ */
 const adoptionApplicationModel = new mongoose.Schema<AdoptionApplication>({
   adopter: {
     type: mongoose.Schema.Types.ObjectId,

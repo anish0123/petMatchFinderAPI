@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import {Rating} from '../../types/DBTypes';
-
+/**
+ *
+ */
 const ratingModel = new mongoose.Schema<Rating>({
   rating: {
     type: Number,

@@ -171,7 +171,6 @@ export default {
         if (!deletedApplication) {
           throw new Error('Error deleting application');
         }
-        console.log('deletedApplication: ', deletedApplication);
         return {
           message: 'adoption application deleted',
           adoptionApplication: deletedApplication,

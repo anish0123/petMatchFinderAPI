@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
 import {Animal} from '../../types/DBTypes';
 
+/**
+ * Schema for animal
+ */
 const animalModel = new mongoose.Schema<Animal>({
   animal_name: {
     type: String,

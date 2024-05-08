@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import {Category} from '../../types/DBTypes';
-
+/**
+ * Schema for category
+ */
 const categorSchema = new mongoose.Schema<Category>({
   category_name: {
     type: String,

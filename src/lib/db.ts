@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();
 
+/**
+ * Method to connect to mongo db
+ * @returns db connection
+ */
 const mongoConnect = async () => {
   try {
     if (!process.env.DATABASE_URL) {

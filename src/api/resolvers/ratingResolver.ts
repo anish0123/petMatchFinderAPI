@@ -13,7 +13,9 @@ if (!process.env.SOCKET_URL) {
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
   process.env.SOCKET_URL as string,
 );
-
+/**
+ * Resolver for rating
+ */
 export default {
   Query: {
     ratings: async () => {
@@ -54,9 +56,7 @@ export default {
       args: {ratedTo: string},
     ) => {
       try {
-        console.log('args: ', args);
         const ratings = await ratingModel.find({ratedTo: args.ratedTo});
-        console.log('ratings: ', ratings);
         if (ratings.length === 0) {
           throw new GraphQLError('ratings not found', {
             extensions: {code: 'NOT_FOUND'},

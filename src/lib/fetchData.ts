@@ -1,5 +1,11 @@
 import {GraphQLError} from 'graphql';
 
+/**
+ * Method to fetch data from other server
+ * @param url  server url
+ * @param options request options
+ * @returns response
+ */
 const fetchData = async <T>(
   url: string,
   options: RequestInit = {},

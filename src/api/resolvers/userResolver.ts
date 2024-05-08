@@ -15,6 +15,9 @@ import {
   UserResponse,
 } from '../../types/MessageTypes';
 
+/**
+ * Resolver for user
+ */
 export default {
   AdoptionApplication: {
     adopter: async (
@@ -165,7 +168,6 @@ export default {
         process.env.AUTH_URL + '/users',
         options,
       );
-      console.log('user: ', user);
       return {message: 'user updated', user: user.user, token: user.token};
     },
     deleteUser: async (
