@@ -1,11 +1,13 @@
 # Pet Match Finder
-Pet Match Finder is a project developed under Metropolia University of Applied Sciences's scope. It is an application where users are able to login, view pets, adopt pets or put pets for adoption online, provide ratings and feedback to other users. 
+Pet Match Finder is a server side project developed under Metropolia University of Applied Sciences's scope. It is an application where users are able to login, view pets, adopt pets or put pets for adoption online, provide ratings and feedback to other users. It is a graphQl server built with TypeScript, Node.js and Express. The main aim of this app is to create seamless interface for pet adoption. 
+
 
 ## Table of contents
 - [Features](#features)
 - [Technologies](#technologies)
 - [Installation steps](#installation-steps)
 - [Author](#author)
+- [Related](#related)
 
 ## Features
 + **Register, Login, Logout**: Users can register, login, logout into the application by using their email.
@@ -41,6 +43,12 @@ Pet Match Finder is a project developed under Metropolia University of Applied S
   + `SOCKET_URL`
 - Run all the sub projects
 - Run the project with `npm run dev`
+
+## Related
+- [User Stories](https://trello.com/b/oClBeZTq/user-stories)
+- [Product Backlog](https://trello.com/b/hegwsxqj/product-backlog)
+- [Azure GraphQl server](https://anishm-pet-match-finder-api.azurewebsites.net/graphql)
+
 
 
 ## Author
