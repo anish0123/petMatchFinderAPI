@@ -4,10 +4,12 @@ Pet Match Finder is a server side project developed under Metropolia University 
 
 ## Table of contents
 - [Features](#features)
+- [Usage and target groups](#usage-and-target-groups)
 - [Technologies](#technologies)
 - [Installation steps](#installation-steps)
-- [Author](#author)
 - [Related](#related)
+- [Demo](#demo)
+ - [Author](#author)
 
 ## Features
 + **Register, Login, Logout**: Users can register, login, logout into the application by using their email.
@@ -17,14 +19,18 @@ Pet Match Finder is a server side project developed under Metropolia University 
 + **Edit or delete adoption application**: Users are able to edit or delete their adoption applications.
 + **rate other users**: Users are able to rate and provide feedback to other users.
 
+## Usage and target groups
+The usage of this application is to make online pet adoption smooth, easy and time saving. The target groups are pet lovers who want to adopt pets and users who want to put pet for adoption like breeders, animal shelters and so on.
+
 ## Technologies
 - TypeScript
 - Node.js
 - Express
 - GraphQl
-- Mongoose
 - Socket.io
 - Apollo Server
+- MongoDB
+- Azure Webapp services
 
 ## Installation steps
 - Clone this project
@@ -32,24 +38,31 @@ Pet Match Finder is a server side project developed under Metropolia University 
   + [Auth Server](https://github.com/anish0123/PetMatchFinder-Auth)
   + [Upload Server](https://github.com/anish0123/petMatchFinder-Upload)
   + [Socket Server](https://github.com/anish0123/PetMatchFinder-Socket)
-  + [Frontend](https://github.com/anish0123/petMatchFinder-GUI)- This could be optional.
+  + [Frontend](https://github.com/anish0123/petMatchFinder-GUI)
 - Create `.env` file and add following fields:
-  + `NODE_ENV`
-  + `PORT`
-  + `DATABASE_URL`
-  + `JWT_SECRET`
-  + `AUTH_URL`
-  + `UPLOAD_URL`
-  + `SOCKET_URL`
+  
+   ```
+  NODE_ENV=development
+  PORT=3000
+  DATABASE_URL=
+  JWT_SECRET=
+  AUTH_URL=
+  UPLOAD_URL=
+  SOCKET_URL=
+   ```
 - Run all the sub projects
 - Run the project with `npm run dev`
 
 ## Related
-- [User Stories](https://trello.com/b/oClBeZTq/user-stories)
-- [Product Backlog](https://trello.com/b/hegwsxqj/product-backlog)
+- [Trello Board: User Stories](https://trello.com/b/oClBeZTq/user-stories)
+- [Trello Board: Product Backlog](https://trello.com/b/hegwsxqj/product-backlog)
 - [Azure GraphQl server](https://anishm-pet-match-finder-api.azurewebsites.net/graphql)
+- [Pet Match Finder- UI](https://anish0123.github.io/petMatchFinder-GUI/)
+
+## Demo
+[![DemoVideo](https://img.youtube.com/vi/KrspxuMndt0/0.jpg)](https://youtu.be/KrspxuMndt0)
 
 
 
 ## Author
-Anish Maharjan
+[Anish Maharjan](https://github.com/anish0123)
