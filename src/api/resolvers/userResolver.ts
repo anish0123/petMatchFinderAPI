@@ -35,12 +35,16 @@ export default {
   },
   Animal: {
     owner: async (parent: Animal): Promise<UserWithoutPasswordRole> => {
+      console.log('working till here in owner fetch for animal');
       if (!process.env.AUTH_URL) {
+        console.log('throwing error for env file');
         throw new GraphQLError('No auth url set in .env file');
       }
       const user = await fetchData<User>(
         process.env.AUTH_URL + '/users/' + parent.owner,
       );
+      console.log('working after fetching user in owner fetch for animal');
+      console.log('userData: ', user);
       user.id = user._id;
       return user;
     },
@@ -69,13 +73,16 @@ export default {
   },
   Query: {
     users: async () => {
+      console.log('fetching users');
       if (!process.env.AUTH_URL) {
+        console.log('throwing erro');
         throw new GraphQLError('No auth url set in .env file');
       }
       const users = await fetchData<User[]>(process.env.AUTH_URL + '/users');
       users.forEach((user) => {
         user.id = user._id;
       });
+      console.log('users: ', users);
       return users;
     },
     userById: async (_parent: undefined, args: {id: string}) => {

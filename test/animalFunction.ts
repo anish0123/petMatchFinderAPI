@@ -119,7 +119,6 @@ const putAnimal = (
         if (err) {
           reject(err);
         } else {
-          console.log('response.body: ', response.body);
           const animalData = response.body.data.modifyAnimal;
           expect(animalData).toHaveProperty('message');
           expect(animalData).toHaveProperty('animal');
@@ -236,7 +235,6 @@ const getAnimalByOwner = (
         if (err) {
           reject(err);
         } else {
-          console.log('response: ', response.body);
           const animals = response.body.data.animalsByOwner;
           expect(animals).toBeInstanceOf(Array);
           expect(animals[0]).toHaveProperty('id');
@@ -279,7 +277,6 @@ const deleteAnimal = (
         if (err) {
           reject(err);
         } else {
-          console.log('response: ', response.body);
           const animal = response.body.data.deleteAnimal;
           expect(animal.animal.id).toBe(id);
           expect(animal.animal).toHaveProperty('animal_name');

@@ -152,7 +152,6 @@ const deleteAdoptionApplication = (
         if (err) {
           reject(err);
         } else {
-          console.log('response: ', response.body);
           const applicationData = response.body.data.deleteAdoptionApplication;
           expect(applicationData).toHaveProperty('message');
           expect(applicationData).toHaveProperty('adoptionApplication');

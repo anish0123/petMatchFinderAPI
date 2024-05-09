@@ -176,7 +176,6 @@ describe('Testing graphql api for Pet Match Finder app', () => {
       application,
       userData.token,
     );
-    console.log('adoptionApplication: ', adoptionApplication);
   });
 
   it('should modify adoptionApplication', async () => {

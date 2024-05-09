@@ -3,7 +3,9 @@ import adoptionApplicationModel from '../models/adoptionApplication';
 import {AdoptionApplication} from '../../types/DBTypes';
 import {MyContext} from '../../types/MyContext';
 import animalModel from '../models/animalModel';
-
+/**
+ * Resolver for adoption application
+ */
 export default {
   Query: {
     adoptionApplications: async () => {
