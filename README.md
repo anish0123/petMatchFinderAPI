@@ -4,6 +4,7 @@ Pet Match Finder is a server side project developed under Metropolia University 
 
 ## Table of contents
 - [Features](#features)
+- [Links for testing](#links-for-testing)
 - [Usage and target groups](#usage-and-target-groups)
 - [Technologies](#technologies)
 - [Installation steps](#installation-steps)
@@ -18,6 +19,10 @@ Pet Match Finder is a server side project developed under Metropolia University 
 + **Apply for adoption**: Users are able to apply for adopting a pet through the application.
 + **Edit or delete adoption application**: Users are able to edit or delete their adoption applications.
 + **rate other users**: Users are able to rate and provide feedback to other users.
+
+## Links for testing
+- [Azure GraphQl server](https://anishm-pet-match-finder-api.azurewebsites.net/graphql)
+- [Pet Match Finder- UI](https://anish0123.github.io/petMatchFinder-GUI/)
 
 ## Usage and target groups
 The usage of this application is to make online pet adoption smooth, easy and time saving. The target groups are pet lovers who want to adopt pets and users who want to put pet for adoption like breeders, animal shelters and so on.
@@ -56,8 +61,6 @@ The usage of this application is to make online pet adoption smooth, easy and ti
 ## Related
 - [Trello Board: User Stories](https://trello.com/b/oClBeZTq/user-stories)
 - [Trello Board: Product Backlog](https://trello.com/b/hegwsxqj/product-backlog)
-- [Azure GraphQl server](https://anishm-pet-match-finder-api.azurewebsites.net/graphql)
-- [Pet Match Finder- UI](https://anish0123.github.io/petMatchFinder-GUI/)
 
 ## Demo
 [![DemoVideo](https://img.youtube.com/vi/KrspxuMndt0/0.jpg)](https://youtu.be/KrspxuMndt0)
