@@ -24,6 +24,38 @@ Pet Match Finder is a server side project developed under Metropolia University 
 - [Azure GraphQl server](https://anishm-pet-match-finder-api.azurewebsites.net/graphql)
 - [Pet Match Finder- UI](https://anish0123.github.io/petMatchFinder-GUI/)
 
+## Test steps
+**As a normal user**
+1. Create an account
+2. Login with your account
+3. Navigate to an animal details
+4. Adopt the animal.
+5. Fill in details and submit applicaiton
+6. Edit application details
+7. Navigate to user profile
+8. Update profile
+9. Check user rating
+10. View your adoption applications
+11. Delete adoption application
+12. Navigate to home and navigate to an animal details
+13. Navigate to animal's owner details
+14. Check rating and add rating for the user
+15. Edit rating and delete rating
+16. Navigate to add animal from nav bar
+17. Fill the form and add animal
+18. Edit details of animal
+19. Use another account or admin account to apply for adoption
+20 Login with your account and visit profile
+21. Navigate to your animals and open animal details
+22. Approve or reject application
+  
+**As admin user**
+1. Login as admin
+2. Navigate to categories page from nav bar
+3. Add, edit and delete categories
+4. Navigate to home page and open any animal details
+5. Delete animal
+
 ## Usage and target groups
 The usage of this application is to make online pet adoption smooth, easy and time saving. The target groups are pet lovers who want to adopt pets and users who want to put pet for adoption like breeders, animal shelters and so on.
 
